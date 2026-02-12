@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIMELESS | بوتيك الساعات الفاخرة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #c5a059;
+            --dark: #0a0a0a;
+        }
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background-color: var(--dark);
+            color: #fff;
+        }
+        .luxury-font { font-family: 'Playfair Display', serif; }
+        .gold-border { border-color: var(--gold); }
+        .gold-bg { background-color: var(--gold); }
+        .gold-text { color: var(--gold); }
+        
+        /* تأثير الزجاج الخلفي */
+        .glass-header {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+        }
+
+        .watch-card {
+            background: #111;
+            border: 1px solid #222;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .watch-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+
+        .hero-section {
+            background: linear-gradient(to bottom, rgba(10,10,10,0.2), #0a0a0a), 
+                        url('https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=2080');
+            background-size: cover;
+            background-position: center;
+            height: 60vh;
+        }
+
+        input::placeholder { color: #555; }
+    </style>
+</head>
+<body>
+
+    <nav class="glass-header sticky top-0 p-5 border-b border-white/5">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="luxury-font text-3xl font-bold tracking-tighter gold-text italic">TIMELESS</h1>
+            <div class="hidden md:flex gap-8 text-sm uppercase tracking-widest text-gray-400">
+                <a href="#" class="hover:text-white transition">المجموعة الجديدة</a>
+                <a href="#" class="hover:text-white transition">الأكثر مبيعاً</a>
+                <a href="#" class="hover:text-white transition">من نحن</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section flex items-center justify-center text-center px-4">
+        <div>
+            <h2 class="luxury-font text-5xl md:text-7xl mb-4 font-bold">فخامة الوقت</h2>
+            <p class="text-gray-300 tracking-[0.3em] uppercase text-sm">اكتشف مجموعتنا الحصرية من الساعات العالمية</p>
+        </div>
+    </section>
+
+    <div class="container mx-auto px-6 -mt-20 relative z-10">
+        <section class="bg-[#161616] p-8 rounded-lg border border-white/5 shadow-2xl mb-16">
+            <h3 class="gold-text text-lg mb-6 font-bold flex items-center gap-3">
+                <span class="w-8 h-[1px] gold-bg"></span>
+                بوابة إضافة المنتجات
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <input id="watchName" type="text" placeholder="اسم الساعة" class="bg-black/50 border border-white/10 p-4 rounded focus:border-yellow-600 outline-none text-white">
+                <input id="watchPrice" type="number" placeholder="السعر بالدولار" class="bg-black/50 border border-white/10 p-4 rounded focus:border-yellow-600 outline-none text-white">
+                <input id="watchImage" type="text" placeholder="رابط الصورة المباشر" class="bg-black/50 border border-white/10 p-4 rounded focus:border-yellow-600 outline-none text-white">
+                <button id="addBtn" class="gold-bg text-black font-bold uppercase tracking-widest py-4 hover:brightness-110 transition">إضافة للمتجر</button>
+            </div>
+        </section>
+
+        <div class="flex items-end justify-between mb-12">
+            <div>
+                <h3 class="text-3xl font-bold">المجموعة المتاحة</h3>
+                <div class="h-1 w-20 gold-bg mt-2"></div>
+            </div>
+            <p id="count" class="text-gray-500 italic"></p>
+        </div>
+
+        <div id="watchesContainer" class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            </div>
+    </div>
+
+    <footer class="mt-20 p-10 border-t border-white/5 text-center text-gray-600 text-sm">
+        <p>&copy; 2026 TIMELESS LUXURY BOUTIQUE. ALL RIGHTS RESERVED.</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc } 
+        from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // !!! إعداداتك هنا !!!
+        const firebaseConfig = {
+          apiKey: "AIzaSyC9zZaeUCO39vW4cE7b2CcIfBLC4TrC2AA",
+          authDomain: "watchstore-fdd5d.firebaseapp.com",
+         projectId: "watchstore-fdd5d",
+         storageBucket: "watchstore-fdd5d.firebasestorage.app",
+          messagingSenderId: "165836153369",
+         appId: "1:165836153369:web:e7074d1bd37c8ce9f38088"
+         };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const colRef = collection(db, "luxury_watches");
+
+        onSnapshot(colRef, (snapshot) => {
+            const container = document.getElementById('watchesContainer');
+            document.getElementById('count').innerText = `عدد القطع الحالية: ${snapshot.size}`;
+            container.innerHTML = '';
+            
+            snapshot.forEach((d) => {
+                const watch = d.data();
+                const id = d.id;
+                container.innerHTML += `
+                    <div class="watch-card rounded-none overflow-hidden relative group">
+                        <div class="h-80 overflow-hidden relative">
+                            <img src="${watch.img}" class="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
+                                <button onclick="editWatch('${id}')" class="bg-white text-black p-3 rounded-full hover:bg-gold transition"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+                                <button onclick="deleteWatch('${id}')" class="bg-red-600 text-white p-3 rounded-full hover:bg-red-700 transition"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button>
+                            </div>
+                        </div>
+                        <div class="p-6 text-center">
+                            <h4 class="luxury-font text-xl mb-2 tracking-wide uppercase">${watch.name}</h4>
+                            <p class="gold-text font-light tracking-[0.2em]">$${watch.price}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        });
+
+        document.getElementById('addBtn').addEventListener('click', async () => {
+            const name = document.getElementById('watchName').value;
+            const price = document.getElementById('watchPrice').value;
+            const img = document.getElementById('watchImage').value;
+
+            if(name && price && img) {
+                await addDoc(colRef, { name, price, img });
+                alert("تمت إضافة المنتج بنجاح للمجموعة السحابية");
+                document.getElementById('watchName').value = '';
+                document.getElementById('watchPrice').value = '';
+                document.getElementById('watchImage').value = '';
+            } else {
+                alert("يرجى التأكد من تعبئة جميع الحقول");
+            }
+        });
+
+        window.deleteWatch = async (id) => {
+            if(confirm("هل تريد إزالة هذا المنتج من العرض؟")) {
+                await deleteDoc(doc(db, "luxury_watches", id));
+            }
+        };
+
+        window.editWatch = async (id) => {
+            const newPrice = prompt("أدخل السعر الجديد:");
+            if(newPrice) {
+                await updateDoc(doc(db, "luxury_watches", id), { price: newPrice });
+            }
+        };
+    </script>
+</body>
+</html>
