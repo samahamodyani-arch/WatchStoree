@@ -167,7 +167,7 @@
         };
 
         window.editWatch = async (id) => {
-            const newPrice = prompt("قم ب ادخال السعر الجديد:");
+            const newPrice = prompt("قم ب ادخال لالالالاالسعر الجديد:");
             if(newPrice) {
                 await updateDoc(doc(db, "luxury_watches", id), { price: newPrice });
             }
