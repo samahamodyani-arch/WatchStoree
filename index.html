@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TIMELESS | بوتيك الساعات الفاخرة</title>
+    <title>TIMELESS | بوتيك ساعات فاخره</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
     <style>
@@ -21,7 +21,7 @@
         .gold-bg { background-color: var(--gold); }
         .gold-text { color: var(--gold); }
         
-        /* تأثير الزجاج الخلفي */
+        /* تأثيرات الزجاج الخلفي */
         .glass-header {
             background: rgba(10, 10, 10, 0.8);
             backdrop-filter: blur(15px);
@@ -167,7 +167,7 @@
         };
 
         window.editWatch = async (id) => {
-            const newPrice = prompt("أدخل السعر الجديد:");
+            const newPrice = prompt("قم ب ادخال السعر الجديد:");
             if(newPrice) {
                 await updateDoc(doc(db, "luxury_watches", id), { price: newPrice });
             }
